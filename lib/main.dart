@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:uber_clone_2_driver/screens/loginpage.dart';
 import 'package:uber_clone_2_driver/screens/mainpage.dart';
 import 'package:uber_clone_2_driver/screens/registerpage.dart';
 import 'package:uber_clone_2_driver/screens/vehicleinfo.dart';
@@ -33,11 +34,13 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        fontFamily: 'Brand-Reguler',
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      initialRoute: RegisterPage.id,
+      initialRoute: LoginPage.id,
       routes: {
         MainPage.id : (context) => MainPage(),
+        LoginPage.id : (context) => LoginPage(),
         RegisterPage.id : (context) => RegisterPage(),
         VehicleInfoPage.id : (context) => VehicleInfoPage(),
       },

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:uber_clone_2_driver/brand_colors.dart';
 import 'package:uber_clone_2_driver/globalvariabel.dart';
+import 'package:uber_clone_2_driver/screens/loginpage.dart';
 import 'package:uber_clone_2_driver/screens/mainpage.dart';
 import 'package:uber_clone_2_driver/screens/vehicleinfo.dart';
 import 'package:uber_clone_2_driver/widgets/progress_dialog.dart';
@@ -78,9 +79,9 @@ class _RegisterPageState extends State<RegisterPage> {
 
       databaseReference.set(userMap);
 
-      currentFirebaseUser = user; //todo 11 (next vehicleinfo)
+      currentFirebaseUser = user;
 
-      Navigator.pushNamed(context, VehicleInfoPage.id); //todo 13 (finish)
+      Navigator.pushNamed(context, VehicleInfoPage.id);
 
     }
 
@@ -234,11 +235,11 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 FlatButton(
                   onPressed: () {
-                    // Navigator.pushNamedAndRemoveUntil(
-                    //   context,
-                    //   LoginPage.id,
-                    //   (route) => false,
-                    // );
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      LoginPage.id,
+                      (route) => false,
+                    );
                   },
                   child: Text(
                     'Already have a DRIVER account? Log in',
