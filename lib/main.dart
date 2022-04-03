@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:uber_clone_2_driver/screens/mainpage.dart';
 import 'package:uber_clone_2_driver/screens/registerpage.dart';
+import 'package:uber_clone_2_driver/screens/vehicleinfo.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,7 +38,8 @@ class MyApp extends StatelessWidget {
       initialRoute: RegisterPage.id,
       routes: {
         MainPage.id : (context) => MainPage(),
-        RegisterPage.id : (context) => RegisterPage(), //todo 2 (finish)
+        RegisterPage.id : (context) => RegisterPage(),
+        VehicleInfoPage.id : (context) => VehicleInfoPage(),
       },
     );
   }

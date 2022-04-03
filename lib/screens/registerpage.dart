@@ -4,12 +4,11 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:uber_clone_2_driver/brand_colors.dart';
+import 'package:uber_clone_2_driver/globalvariabel.dart';
 import 'package:uber_clone_2_driver/screens/mainpage.dart';
+import 'package:uber_clone_2_driver/screens/vehicleinfo.dart';
 import 'package:uber_clone_2_driver/widgets/progress_dialog.dart';
 import 'package:uber_clone_2_driver/widgets/taxi_button.dart';
-
-// todo 1 (next main)
-// langkah2 sama dengan uber_clone_2
 
 class RegisterPage extends StatefulWidget {
   static const String id = 'register';
@@ -30,6 +29,15 @@ class _RegisterPageState extends State<RegisterPage> {
   var emailController = TextEditingController();
 
   var passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    fullNameController.dispose();
+    phoneController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   void showSnackBar(String title){
     final snackbar = SnackBar(content: Text(title,textAlign: TextAlign.center,style: TextStyle(fontSize: 15),),);
@@ -70,7 +78,9 @@ class _RegisterPageState extends State<RegisterPage> {
 
       databaseReference.set(userMap);
 
-      Navigator.pushNamedAndRemoveUntil(context, MainPage.id, (route) => false);
+      currentFirebaseUser = user; //todo 11 (next vehicleinfo)
+
+      Navigator.pushNamed(context, VehicleInfoPage.id); //todo 13 (finish)
 
     }
 
