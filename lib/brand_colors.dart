@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class BrandColors{
 
+  static const Color colorIcon = Color(0xFF666666);
   static const Color colorPrimary = Color(0xFF2B1A64);
   static const Color colorPrimaryDark = Color(0xFF1c3aa9);
   static const Color colorAccent = Color(0xFF21ba45);

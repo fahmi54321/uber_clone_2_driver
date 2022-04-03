@@ -1,0 +1,9 @@
+import 'package:flutter/material.dart';
+
+class EarningsTab extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(child: Text('Hello Earnings tab'),);
+  }
+}
