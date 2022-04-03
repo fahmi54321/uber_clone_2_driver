@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:uber_clone_2_driver/globalvariabel.dart';
 import 'package:uber_clone_2_driver/screens/loginpage.dart';
 import 'package:uber_clone_2_driver/screens/mainpage.dart';
 import 'package:uber_clone_2_driver/screens/registerpage.dart';
@@ -23,6 +25,9 @@ Future<void> main() async {
       databaseURL: 'https://uber-d5e16-default-rtdb.firebaseio.com',
     ),
   );
+
+  currentFirebaseUser = await FirebaseAuth.instance.currentUser(); //todo 1
+
   runApp(MyApp());
 }
 
@@ -37,7 +42,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Brand-Reguler',
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      initialRoute: LoginPage.id,
+      initialRoute: (currentFirebaseUser == null) ? LoginPage.id : MainPage.id, //todo 2 (finish)
       routes: {
         MainPage.id : (context) => MainPage(),
         LoginPage.id : (context) => LoginPage(),
