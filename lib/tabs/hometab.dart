@@ -3,7 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:uber_clone_2_driver/brand_colors.dart';
 import 'package:uber_clone_2_driver/globalvariabel.dart';
+import 'package:uber_clone_2_driver/widgets/available_button.dart';
+import 'package:uber_clone_2_driver/widgets/taxi_button.dart';
 
 class HomeTab extends StatefulWidget {
   @override
@@ -15,9 +18,8 @@ class _HomeTabState extends State<HomeTab> {
   GoogleMapController mapController;
   Completer<GoogleMapController> _controller = Completer();
 
-  Position currentPosition; //todo 1
+  Position currentPosition;
 
-  //todo 2
   void getCurrentPosition() async{
     Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation);
     currentPosition = position;
@@ -30,6 +32,7 @@ class _HomeTabState extends State<HomeTab> {
     return Stack(
       children: [
         GoogleMap(
+          padding: EdgeInsets.only(top: 135),
           initialCameraPosition: googlePlex,
           myLocationEnabled: true,
           myLocationButtonEnabled: true,
@@ -38,9 +41,18 @@ class _HomeTabState extends State<HomeTab> {
             _controller.complete(controller);
             mapController = controller;
 
-            getCurrentPosition(); //todo 3 (finish)
+            getCurrentPosition();
           },
         ),
+
+        Container(height: 135,width: double.infinity,color:BrandColors.colorPrimary,), //todo 1
+
+        Positioned(top: 60,left : 0,right: 0,child: Row( //todo 2 (finish)
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AvailableButton(title: 'GO ONLINE', color: BrandColors.colorOrange, onPressed: (){}),
+          ],
+        )),
       ],
     );
   }
