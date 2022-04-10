@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:uber_clone_2_driver/brand_colors.dart';
@@ -19,6 +21,8 @@ class _HomeTabState extends State<HomeTab> {
   Completer<GoogleMapController> _controller = Completer();
 
   Position currentPosition;
+
+  DatabaseReference tripRequestRef;
 
   void getCurrentPosition() async{
     Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation);
@@ -45,15 +49,48 @@ class _HomeTabState extends State<HomeTab> {
           },
         ),
 
-        Container(height: 135,width: double.infinity,color:BrandColors.colorPrimary,), //todo 1
+        Container(height: 135,width: double.infinity,color:BrandColors.colorPrimary,),
 
-        Positioned(top: 60,left : 0,right: 0,child: Row( //todo 2 (finish)
+        Positioned(top: 60,left : 0,right: 0,child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            AvailableButton(title: 'GO ONLINE', color: BrandColors.colorOrange, onPressed: (){}),
-          ],
+                AvailableButton(
+                    title: 'GO ONLINE',
+                    color: BrandColors.colorOrange,
+                    onPressed: () {
+
+                      //todo 4 (finish)
+                      GoOnline();
+
+                    }),
+              ],
         )),
       ],
     );
   }
+
+  void GoOnline(){
+    Geofire.initialize('driversAvailable'); //todo 1
+
+    //todo 3
+    Geofire.setLocation(currentFirebaseUser.uid, currentPosition.latitude, currentPosition.longitude,);
+    tripRequestRef = FirebaseDatabase.instance.reference().child('drivers/${currentFirebaseUser.uid}/newtrip');
+    tripRequestRef.set('waiting');
+    tripRequestRef.onValue.listen((event) { });
+
+  }
+
+  // todo 2 Just change the 'Sites' with your pathToReference
+  /*
+  {
+      "rules": {
+        ".read":true,
+        ".write": true,
+          "Sites": {
+          ".indexOn": ["g"]
+        }
+      }
+    }
+   */
+
 }
