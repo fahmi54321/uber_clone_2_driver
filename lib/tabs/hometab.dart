@@ -8,7 +8,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:uber_clone_2_driver/brand_colors.dart';
 import 'package:uber_clone_2_driver/globalvariabel.dart';
 import 'package:uber_clone_2_driver/widgets/available_button.dart';
-import 'package:uber_clone_2_driver/widgets/taxi_button.dart';
 
 class HomeTab extends StatefulWidget {
   @override
@@ -23,6 +22,12 @@ class _HomeTabState extends State<HomeTab> {
   Position currentPosition;
 
   DatabaseReference tripRequestRef;
+
+  var geolocator = Geolocator();
+  var locationOptions = LocationOptions(
+    accuracy: LocationAccuracy.bestForNavigation,
+    distanceFilter: 4,
+  );
 
   void getCurrentPosition() async{
     Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation);
@@ -59,8 +64,10 @@ class _HomeTabState extends State<HomeTab> {
                     color: BrandColors.colorOrange,
                     onPressed: () {
 
-                      //todo 4 (finish)
+
                       GoOnline();
+
+                      getLocationUpdates(); //todo 2 (finish)
 
                     }),
               ],
@@ -70,27 +77,22 @@ class _HomeTabState extends State<HomeTab> {
   }
 
   void GoOnline(){
-    Geofire.initialize('driversAvailable'); //todo 1
+    Geofire.initialize('driversAvailable');
 
-    //todo 3
     Geofire.setLocation(currentFirebaseUser.uid, currentPosition.latitude, currentPosition.longitude,);
     tripRequestRef = FirebaseDatabase.instance.reference().child('drivers/${currentFirebaseUser.uid}/newtrip');
     tripRequestRef.set('waiting');
     tripRequestRef.onValue.listen((event) { });
-
   }
 
-  // todo 2 Just change the 'Sites' with your pathToReference
-  /*
-  {
-      "rules": {
-        ".read":true,
-        ".write": true,
-          "Sites": {
-          ".indexOn": ["g"]
-        }
-      }
-    }
-   */
+  //todo 1
+  void getLocationUpdates(){
+    homeTabPositionStream = geolocator.getPositionStream(locationOptions).listen((Position position) {
+      currentPosition = position;
+      Geofire.setLocation(currentFirebaseUser.uid, position.latitude, position.longitude);
+      LatLng pos = LatLng(position.latitude,position.longitude);
+      mapController.animateCamera(CameraUpdate.newLatLng(pos));
+    });
+  }
 
 }
