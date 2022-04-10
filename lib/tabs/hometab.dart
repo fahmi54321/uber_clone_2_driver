@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:uber_clone_2_driver/globalvariabel.dart';
 
@@ -11,16 +12,24 @@ class HomeTab extends StatefulWidget {
 
 class _HomeTabState extends State<HomeTab> {
 
-  //todo 1 (dokumetasi google map)
+  GoogleMapController mapController;
+  Completer<GoogleMapController> _controller = Completer();
 
-  GoogleMapController mapController; //todo 2
-  Completer<GoogleMapController> _controller = Completer(); //todo 3
+  Position currentPosition; //todo 1
+
+  //todo 2
+  void getCurrentPosition() async{
+    Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation);
+    currentPosition = position;
+    LatLng pos = LatLng(position.latitude,position.longitude);
+    mapController.animateCamera(CameraUpdate.newLatLng(pos));
+  }
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        GoogleMap( //todo 4 (finish)
+        GoogleMap(
           initialCameraPosition: googlePlex,
           myLocationEnabled: true,
           myLocationButtonEnabled: true,
@@ -28,6 +37,8 @@ class _HomeTabState extends State<HomeTab> {
           onMapCreated: (GoogleMapController controller) {
             _controller.complete(controller);
             mapController = controller;
+
+            getCurrentPosition(); //todo 3 (finish)
           },
         ),
       ],
