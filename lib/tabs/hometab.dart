@@ -8,6 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:uber_clone_2_driver/brand_colors.dart';
 import 'package:uber_clone_2_driver/globalvariabel.dart';
 import 'package:uber_clone_2_driver/widgets/available_button.dart';
+import 'package:uber_clone_2_driver/widgets/confirm_sheet.dart';
 
 class HomeTab extends StatefulWidget {
   @override
@@ -28,6 +29,10 @@ class _HomeTabState extends State<HomeTab> {
     accuracy: LocationAccuracy.bestForNavigation,
     distanceFilter: 4,
   );
+
+  String availabitilyTitle = 'GO ONLINE'; //todo 1
+  Color availabitilyColor = BrandColors.colorOrange; //todo 2
+  bool isAvailable = false; //todo 3
 
   void getCurrentPosition() async{
     Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation);
@@ -60,14 +65,39 @@ class _HomeTabState extends State<HomeTab> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
                 AvailableButton(
-                    title: 'GO ONLINE',
-                    color: BrandColors.colorOrange,
+                    title: availabitilyTitle,
+                    color: availabitilyColor,
                     onPressed: () {
+                      showModalBottomSheet(
+                        isDismissible: false,
+                        context: context,
+                        builder: (BuildContext ctx) => ConfirmSheet(
+                          title: (!isAvailable) ? 'GO ONLINE' : 'GO OFFLINE', //todo 4
+                          subtitle: (!isAvailable) ? 'You are about become available to receive trip request' : 'You will stop receiving new trip requests', //todo 5
+                          onPressed: (){
+                            if(!isAvailable){ //todo 6
+                              GoOnline();
+                              getLocationUpdates();
+                              Navigator.pop(context);
 
+                              setState(() {
+                                availabitilyTitle = 'GO OFFLINE';
+                                availabitilyColor = BrandColors.colorGreen;
+                                isAvailable = true;
+                              });
+                            }else{ //todo 7
+                              GoOffline();
+                              Navigator.pop(context);
 
-                      GoOnline();
-
-                      getLocationUpdates(); //todo 2 (finish)
+                              setState(() {
+                                availabitilyTitle = 'GO ONLiNE';
+                                availabitilyColor = BrandColors.colorOrange;
+                                isAvailable = false;
+                              });
+                            }
+                          },
+                        ),
+                      );
 
                     }),
               ],
@@ -85,11 +115,22 @@ class _HomeTabState extends State<HomeTab> {
     tripRequestRef.onValue.listen((event) { });
   }
 
-  //todo 1
+  void GoOffline(){
+    Geofire.removeLocation(currentFirebaseUser.uid);
+    tripRequestRef.onDisconnect();
+    tripRequestRef.remove();
+    tripRequestRef = null;
+  }
+
   void getLocationUpdates(){
     homeTabPositionStream = geolocator.getPositionStream(locationOptions).listen((Position position) {
       currentPosition = position;
-      Geofire.setLocation(currentFirebaseUser.uid, position.latitude, position.longitude);
+
+      //todo 8 (finish)
+      if(isAvailable){
+        Geofire.setLocation(currentFirebaseUser.uid, position.latitude, position.longitude);
+      }
+
       LatLng pos = LatLng(position.latitude,position.longitude);
       mapController.animateCamera(CameraUpdate.newLatLng(pos));
     });
