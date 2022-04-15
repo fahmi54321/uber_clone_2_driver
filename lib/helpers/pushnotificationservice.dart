@@ -1,6 +1,4 @@
-//todo 1 (dokumentasi dari firebase_messaging)
 
-//todo 2
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:uber_clone_2_driver/globalvariabel.dart';
@@ -8,7 +6,6 @@ import 'package:uber_clone_2_driver/globalvariabel.dart';
 class PushNotificationService{
   final FirebaseMessaging fcm = FirebaseMessaging();
 
-  //todo 3
   Future initialize() async{
     fcm.configure(
       onMessage: (Map<String, dynamic> message) async {
@@ -23,7 +20,6 @@ class PushNotificationService{
     );
   }
 
-  //todo 4 (next hometab)
   Future<String> getToken() async{
     String token = await fcm.getToken();
     print('token : $token');
@@ -37,3 +33,22 @@ class PushNotificationService{
   }
 
 }
+
+//todo 1 (finish)
+/**
+ * Testing dengan firebase console > cloud messaging
+ * How to ?
+ * 1. Click New notification
+ * 2. Isikan notification title dan notification text
+ * 3. pada tab target bagian topic pilih alldrivers
+ * 4. pada tab scheduling pilih now
+ * 5. sound enabled
+ * 6. and klik review lalu publish
+ *
+ *  * How to testing dengan token?
+ * 1. Click New notification
+ * 2. Isikan notification title dan notification text
+ * 3. klik test message
+ * 4. masukkan token
+ * 5. and klik test
+ */

@@ -72,7 +72,6 @@ class _HomeTabState extends State<HomeTab> {
     });
   }
 
-  //todo 5
   void getCurrentDriverInfo() async{
     currentFirebaseUser = await FirebaseAuth.instance.currentUser();
     PushNotificationService pushNotificationService = PushNotificationService();
@@ -85,7 +84,7 @@ class _HomeTabState extends State<HomeTab> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getCurrentDriverInfo(); //todo 6 (finish)
+    getCurrentDriverInfo();
   }
 
   @override
