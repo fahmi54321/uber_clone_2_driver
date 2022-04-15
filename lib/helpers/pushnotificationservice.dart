@@ -36,19 +36,10 @@ class PushNotificationService{
 
 //todo 1 (finish)
 /**
- * Testing dengan firebase console > cloud messaging
- * How to ?
- * 1. Click New notification
- * 2. Isikan notification title dan notification text
- * 3. pada tab target bagian topic pilih alldrivers
- * 4. pada tab scheduling pilih now
- * 5. sound enabled
- * 6. and klik review lalu publish
- *
- *  * How to testing dengan token?
- * 1. Click New notification
- * 2. Isikan notification title dan notification text
- * 3. klik test message
- * 4. masukkan token
- * 5. and klik test
+ * Testing dengan postman
+ * 'Content-Type': 'application/json',
+ * 'Authorization': 'key=AAAAaFvDVjY:APA91bHMNMeFRHcJgO7DunLEkQXpAl3qxUSkeIxs5qjKFWB-0NAk7T0-0o4ac7EIRLEYdvgSgWJyVqR6xgytp3mnHF4kEQe3OJ_qzxBpxDIYBjtr9a5cp_WbeOWbc5fnyggrOI2x2_m9',
+ *  url : https://fcm.googleapis.com/fcm/send
+ *  body : (raw)
+ *  {"notification": {"body": "this is a body","title": "this is a title"}, "priority": "high", "data": {"click_action": "FLUTTER_NOTIFICATION_CLICK", "id": "1", "status": "done"}, "to": "<FCM TOKEN>"}
  */
