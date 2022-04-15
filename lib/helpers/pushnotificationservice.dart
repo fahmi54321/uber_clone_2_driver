@@ -41,5 +41,5 @@ class PushNotificationService{
  * 'Authorization': 'key=AAAAaFvDVjY:APA91bHMNMeFRHcJgO7DunLEkQXpAl3qxUSkeIxs5qjKFWB-0NAk7T0-0o4ac7EIRLEYdvgSgWJyVqR6xgytp3mnHF4kEQe3OJ_qzxBpxDIYBjtr9a5cp_WbeOWbc5fnyggrOI2x2_m9',
  *  url : https://fcm.googleapis.com/fcm/send
  *  body : (raw)
- *  {"notification": {"body": "this is a body","title": "this is a title"}, "priority": "high", "data": {"click_action": "FLUTTER_NOTIFICATION_CLICK", "id": "1", "status": "done"}, "to": "<FCM TOKEN>"}
+ *  {"notification": {"body": "this is a body","title": "this is a title"}, "priority": "high", "data": {"click_action": "FLUTTER_NOTIFICATION_CLICK", "id": "1", "status": "done","ride_id" :$uid}, "to": "<FCM TOKEN>"}
  */
