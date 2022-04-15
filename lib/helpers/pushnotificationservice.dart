@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:uber_clone_2_driver/datamodels/tripdetails.dart';
 import 'package:uber_clone_2_driver/globalvariabel.dart';
+import 'package:uber_clone_2_driver/widgets/notification_dialog.dart';
 import 'package:uber_clone_2_driver/widgets/progress_dialog.dart';
 
 class PushNotificationService{
@@ -17,18 +18,18 @@ class PushNotificationService{
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
 
-        fetchRideInfo(getRideID(message),context); //todo1
+        fetchRideInfo(getRideID(message),context);
 
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
 
-        fetchRideInfo(getRideID(message),context); //todo 2
+        fetchRideInfo(getRideID(message),context);
       },
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
 
-        fetchRideInfo(getRideID(message),context); //todo 3
+        fetchRideInfo(getRideID(message),context);
 
       },
     );
@@ -47,7 +48,6 @@ class PushNotificationService{
   }
 
 
-  //todo 4
   String getRideID(Map<String, dynamic> message){
     String rideID = '';
 
@@ -60,7 +60,6 @@ class PushNotificationService{
 
   }
 
-  //todo 5
   void fetchRideInfo(String rideId,context){
 
     showDialog(
@@ -93,8 +92,14 @@ class PushNotificationService{
         tripDetails.paymentMethod = paymentMethod;
         tripDetails.rideID = rideId;
 
-        print(tripDetails.destinationAddress);
-
+        //todo 1 (finish)
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext ctx) => NotificationDialog(
+            tripDetails: tripDetails,
+          ),
+        );
       }
     });
   }
