@@ -3,28 +3,32 @@ import 'dart:io';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:uber_clone_2_driver/datamodels/tripdetails.dart';
 import 'package:uber_clone_2_driver/globalvariabel.dart';
+import 'package:uber_clone_2_driver/widgets/progress_dialog.dart';
 
 class PushNotificationService{
   final FirebaseMessaging fcm = FirebaseMessaging();
 
-  Future initialize() async{
+  Future initialize(context) async{
     fcm.configure(
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
 
-        fetchRideInfo(getRideID(message)); //todo1
+        fetchRideInfo(getRideID(message),context); //todo1
 
       },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
 
-        fetchRideInfo(getRideID(message)); //todo 2
+        fetchRideInfo(getRideID(message),context); //todo 2
       },
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
 
-        fetchRideInfo(getRideID(message)); //todo 3
+        fetchRideInfo(getRideID(message),context); //todo 3
 
       },
     );
@@ -56,11 +60,21 @@ class PushNotificationService{
 
   }
 
-  //todo 5 (finish)
-  void fetchRideInfo(String rideId){
+  //todo 5
+  void fetchRideInfo(String rideId,context){
+
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext ctx) => ProgressDialog(status: 'Fetching details'),
+    );
+
     DatabaseReference rideRef = FirebaseDatabase.instance.reference().child('rideRequest/$rideId');
 
     rideRef.once().then((DataSnapshot snapshot) {
+
+      Navigator.pop(context);
+
       if(snapshot.value != null){
         double pickupLat = double.parse(snapshot.value['location']['latitude'].toString());
         double pickupLng = double.parse(snapshot.value['location']['longitude'].toString());
@@ -71,7 +85,16 @@ class PushNotificationService{
         String destinationAddress = snapshot.value['destination_address'];
         String paymentMethod = snapshot.value['payment_method'];
 
-        print(pickupAddress);
+        TripDetails tripDetails = TripDetails();
+        tripDetails.pickupAddress = pickupAddress;
+        tripDetails.destinationAddress = destinationAddress;
+        tripDetails.pickup = LatLng(pickupLat, pickupLng);
+        tripDetails.destination = LatLng(destinationLat, destinationLng);
+        tripDetails.paymentMethod = paymentMethod;
+        tripDetails.rideID = rideId;
+
+        print(tripDetails.destinationAddress);
+
       }
     });
   }
