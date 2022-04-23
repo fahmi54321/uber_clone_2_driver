@@ -1,8 +1,12 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:toast/toast.dart';
 import 'package:uber_clone_2_driver/brand_colors.dart';
 import 'package:uber_clone_2_driver/datamodels/tripdetails.dart';
 import 'package:uber_clone_2_driver/globalvariabel.dart';
+import 'package:uber_clone_2_driver/screens/newtripspage.dart';
 import 'package:uber_clone_2_driver/widgets/TaxiOutlineButton.dart';
+import 'package:uber_clone_2_driver/widgets/progress_dialog.dart';
 
 class NotificationDialog extends StatelessWidget {
 
@@ -68,7 +72,6 @@ class NotificationDialog extends StatelessWidget {
                         title: 'DECLINE',
                         color: BrandColors.colorPrimary,
                         onPressed: () {
-                          //todo 3
                           assetAudioPlayer.stop();
                           Navigator.pop(context);
                         },
@@ -82,8 +85,8 @@ class NotificationDialog extends StatelessWidget {
                         title: 'ACCEPT',
                         color: BrandColors.colorPrimary,
                         onPressed: () {
-                          //todo 4 (finish)
                           assetAudioPlayer.stop();
+                          checkAvailability(context); //todo 2
                         },
                       ),
                     ),
@@ -96,5 +99,41 @@ class NotificationDialog extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  //todo 1
+  void checkAvailability(context){
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) =>
+            ProgressDialog(status: 'Accepting request'));
+
+    DatabaseReference newRideRef = FirebaseDatabase.instance
+        .reference()
+        .child('drivers/${currentFirebaseUser.uid}/newtrip');
+    newRideRef.once().then((DataSnapshot snapshot) {
+
+      Navigator.pop(context);
+      Navigator.pop(context);
+
+      String thisRideID = '';
+      if(snapshot.value != null){
+        thisRideID= snapshot.value.toString();
+      }else{
+        Toast.show("ride not found", context, duration: Toast.LENGTH_SHORT, gravity:  Toast.BOTTOM);
+      }
+
+      if(thisRideID == tripDetails.rideID){
+        newRideRef.set('accepted');
+        Navigator.push(context, MaterialPageRoute(builder: (context) => NewTripsPage(tripDetails: tripDetails,)));
+      }else if(thisRideID == 'cancelled'){
+        Toast.show("ride has been cancelled", context, duration: Toast.LENGTH_SHORT, gravity:  Toast.BOTTOM);
+      }else if(thisRideID == 'timeout'){
+        Toast.show("ride has time out", context, duration: Toast.LENGTH_SHORT, gravity:  Toast.BOTTOM);
+      }else{
+        Toast.show("ride not found", context, duration: Toast.LENGTH_SHORT, gravity:  Toast.BOTTOM);
+      }
+    });
   }
 }
