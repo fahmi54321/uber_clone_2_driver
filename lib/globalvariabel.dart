@@ -17,4 +17,5 @@ final CameraPosition googlePlex = CameraPosition(
 StreamSubscription<Position> homeTabPositionStream;
 
 final assetAudioPlayer = AssetsAudioPlayer();
+Position currentPosition;
 

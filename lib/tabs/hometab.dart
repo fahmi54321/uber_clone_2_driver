@@ -22,8 +22,6 @@ class _HomeTabState extends State<HomeTab> {
   GoogleMapController mapController;
   Completer<GoogleMapController> _controller = Completer();
 
-  Position currentPosition;
-
   DatabaseReference tripRequestRef;
 
   var geolocator = Geolocator();
