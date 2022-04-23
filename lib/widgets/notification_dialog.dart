@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:uber_clone_2_driver/brand_colors.dart';
 import 'package:uber_clone_2_driver/datamodels/tripdetails.dart';
+import 'package:uber_clone_2_driver/globalvariabel.dart';
 import 'package:uber_clone_2_driver/widgets/TaxiOutlineButton.dart';
 
 class NotificationDialog extends StatelessWidget {
@@ -66,7 +67,11 @@ class NotificationDialog extends StatelessWidget {
                       child: TaxiOutlineButton(
                         title: 'DECLINE',
                         color: BrandColors.colorPrimary,
-                        onPressed: () {},
+                        onPressed: () {
+                          //todo 3
+                          assetAudioPlayer.stop();
+                          Navigator.pop(context);
+                        },
                       ),
                     ),
                   ),
@@ -76,7 +81,10 @@ class NotificationDialog extends StatelessWidget {
                       child: TaxiOutlineButton(
                         title: 'ACCEPT',
                         color: BrandColors.colorPrimary,
-                        onPressed: () {},
+                        onPressed: () {
+                          //todo 4 (finish)
+                          assetAudioPlayer.stop();
+                        },
                       ),
                     ),
                   ),

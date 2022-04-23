@@ -1,6 +1,7 @@
 
 import 'dart:io';
 
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -75,6 +76,11 @@ class PushNotificationService{
       Navigator.pop(context);
 
       if(snapshot.value != null){
+
+        //todo 2 (next notification_dialog)
+        assetAudioPlayer.open(Audio('sounds/alert.mp3'));
+        assetAudioPlayer.play();
+
         double pickupLat = double.parse(snapshot.value['location']['latitude'].toString());
         double pickupLng = double.parse(snapshot.value['location']['longitude'].toString());
         String pickupAddress = snapshot.value['pickup_address'].toString();
@@ -92,7 +98,6 @@ class PushNotificationService{
         tripDetails.paymentMethod = paymentMethod;
         tripDetails.rideID = rideId;
 
-        //todo 1 (finish)
         showDialog(
           context: context,
           barrierDismissible: false,
