@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -26,13 +27,18 @@ class _NewTripsPageState extends State<NewTripsPage> {
   GoogleMapController rideMapController;
   Completer<GoogleMapController> _controller = Completer();
 
-  //todo 1
   double mapPaddingBottom = 0;
   Set<Marker>_markers = Set<Marker>();
   Set<Circle>_circles = Set<Circle>();
   Set<Polyline>_polylines = Set<Polyline>();
   List<LatLng> polylineCoordinates = [];
   PolylinePoints polylinePoints = PolylinePoints();
+
+  @override
+  void initState() {
+    super.initState();
+    accetpTrip(); // todo 3 (finish)
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,9 +54,9 @@ class _NewTripsPageState extends State<NewTripsPage> {
             trafficEnabled: true,
             mapType: MapType.normal,
             padding: EdgeInsets.only(bottom: mapPaddingBottom),
-            circles: _circles, //todo 2
-            markers: _markers, //todo 3
-            polylines: _polylines, //todo 4
+            circles: _circles,
+            markers: _markers,
+            polylines: _polylines,
             onMapCreated: (GoogleMapController controller) async{
               _controller.complete(controller);
               rideMapController = controller;
@@ -59,11 +65,9 @@ class _NewTripsPageState extends State<NewTripsPage> {
                 mapPaddingBottom = (Platform.isIOS) ? 255 : 260;
               });
 
-              // todo 5
               var currentLatLng = LatLng(currentPosition.latitude,currentPosition.longitude);
               var pickupLatLng = widget.tripDetails.pickup;
 
-              //todo 6 (finish)
               await getDirection(currentLatLng, pickupLatLng);
 
             },
@@ -273,5 +277,24 @@ class _NewTripsPageState extends State<NewTripsPage> {
       _circles.add(destinationCircle);
     });
 
+  }
+
+  //todo 2
+  void accetpTrip(){
+    String rideID = widget.tripDetails.rideID;
+    rideRef = FirebaseDatabase.instance.reference().child('rideRequest/$rideID');
+
+    rideRef.child('status').set('accepted');
+    rideRef.child('driver_name').set(currentDriverInfo.fullName);
+    rideRef.child('car_details').set('${currentDriverInfo.carColor} - ${currentDriverInfo.carModel}');
+    rideRef.child('driver_phone').set(currentDriverInfo.phone);
+    rideRef.child('driver_id').set(currentDriverInfo.id);
+
+    Map locationMap = {
+      'latitude' : currentPosition.latitude.toString(),
+      'longitude' : currentPosition.longitude.toString(),
+    };
+
+    rideRef.child('driver_location').set(locationMap);
   }
 }

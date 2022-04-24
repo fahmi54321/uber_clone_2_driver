@@ -7,6 +7,7 @@ import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:uber_clone_2_driver/brand_colors.dart';
+import 'package:uber_clone_2_driver/datamodels/drivers.dart';
 import 'package:uber_clone_2_driver/globalvariabel.dart';
 import 'package:uber_clone_2_driver/helpers/pushnotificationservice.dart';
 import 'package:uber_clone_2_driver/widgets/available_button.dart';
@@ -72,6 +73,15 @@ class _HomeTabState extends State<HomeTab> {
 
   void getCurrentDriverInfo() async{
     currentFirebaseUser = await FirebaseAuth.instance.currentUser();
+
+    //todo 1 (next newtripspage)
+    DatabaseReference driverRef = FirebaseDatabase.instance.reference().child('drivers/${currentFirebaseUser.uid}');
+    driverRef.once().then((DataSnapshot snapshot) {
+      if(snapshot != null){
+        currentDriverInfo = Driver.fromSnapshot(snapshot);
+      }
+    });
+
     PushNotificationService pushNotificationService = PushNotificationService();
 
     pushNotificationService.initialize(context);
