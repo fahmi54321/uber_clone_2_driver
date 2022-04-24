@@ -4,6 +4,7 @@ import 'package:toast/toast.dart';
 import 'package:uber_clone_2_driver/brand_colors.dart';
 import 'package:uber_clone_2_driver/datamodels/tripdetails.dart';
 import 'package:uber_clone_2_driver/globalvariabel.dart';
+import 'package:uber_clone_2_driver/helpers/helpersmethod.dart';
 import 'package:uber_clone_2_driver/screens/newtripspage.dart';
 import 'package:uber_clone_2_driver/widgets/TaxiOutlineButton.dart';
 import 'package:uber_clone_2_driver/widgets/progress_dialog.dart';
@@ -86,7 +87,7 @@ class NotificationDialog extends StatelessWidget {
                         color: BrandColors.colorPrimary,
                         onPressed: () {
                           assetAudioPlayer.stop();
-                          checkAvailability(context); //todo 2
+                          checkAvailability(context);
                         },
                       ),
                     ),
@@ -101,7 +102,6 @@ class NotificationDialog extends StatelessWidget {
     );
   }
 
-  //todo 1
   void checkAvailability(context){
     showDialog(
         context: context,
@@ -126,6 +126,10 @@ class NotificationDialog extends StatelessWidget {
 
       if(thisRideID == tripDetails.rideID){
         newRideRef.set('accepted');
+
+        //todo 3 (finish)
+        HelperMethods.disableHomeTabLocationUpdates();
+
         Navigator.push(context, MaterialPageRoute(builder: (context) => NewTripsPage(tripDetails: tripDetails,)));
       }else if(thisRideID == 'cancelled'){
         Toast.show("ride has been cancelled", context, duration: Toast.LENGTH_SHORT, gravity:  Toast.BOTTOM);

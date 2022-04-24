@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter_geofire/flutter_geofire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:uber_clone_2_driver/datamodels/directiondetails.dart';
@@ -50,6 +51,18 @@ class HelperMethods{
     int randInt = randomGenerator.nextInt(max);
 
     return randInt.toDouble();
+  }
+
+  //todo 1
+  static void disableHomeTabLocationUpdates(){
+    homeTabPositionStream.pause();
+    Geofire.removeLocation(currentFirebaseUser.uid);
+  }
+
+  //todo 2 (next notifiation_dialog)
+  static void enableHomeTabLocationUpdates(){
+    homeTabPositionStream.resume();
+    Geofire.setLocation(currentFirebaseUser.uid, currentPosition.latitude, currentPosition.longitude);
   }
 
 }
