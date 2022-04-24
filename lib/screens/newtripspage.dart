@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:uber_clone_2_driver/brand_colors.dart';
 import 'package:uber_clone_2_driver/datamodels/tripdetails.dart';
@@ -34,14 +35,40 @@ class _NewTripsPageState extends State<NewTripsPage> {
   List<LatLng> polylineCoordinates = [];
   PolylinePoints polylinePoints = PolylinePoints();
 
+  //todo 1
+  var geolocator = Geolocator();
+  var locationOptions = LocationOptions(accuracy: LocationAccuracy.bestForNavigation);
+  BitmapDescriptor movingMarkerIcon;
+  Position myPosition;
+
+  //todo 2
+  void createMarker() {
+    if (movingMarkerIcon == null) {
+      ImageConfiguration imageConfiguration =
+          createLocalImageConfiguration(context, size: Size(2, 2));
+      BitmapDescriptor.fromAssetImage(
+              imageConfiguration,
+              (Platform.isIOS)
+                  ? 'images/car_ios.png'
+                  : 'images/car_android.png')
+          .then((icon) {
+        movingMarkerIcon = icon;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    accetpTrip(); // todo 3 (finish)
+    accetpTrip();
   }
 
   @override
   Widget build(BuildContext context) {
+
+    //todo 3
+    createMarker();
+
     return Scaffold(
       body: Stack(
         children: [
@@ -69,6 +96,9 @@ class _NewTripsPageState extends State<NewTripsPage> {
               var pickupLatLng = widget.tripDetails.pickup;
 
               await getDirection(currentLatLng, pickupLatLng);
+
+              //todo 5 (finish)
+              getLocationUpdates();
 
             },
           ),
@@ -279,7 +309,6 @@ class _NewTripsPageState extends State<NewTripsPage> {
 
   }
 
-  //todo 2
   void accetpTrip(){
     String rideID = widget.tripDetails.rideID;
     rideRef = FirebaseDatabase.instance.reference().child('rideRequest/$rideID');
@@ -297,4 +326,32 @@ class _NewTripsPageState extends State<NewTripsPage> {
 
     rideRef.child('driver_location').set(locationMap);
   }
+
+  //todo 4
+  void getLocationUpdates(){
+    ridePositionStream = geolocator.getPositionStream(locationOptions).listen((Position position) {
+      myPosition = position;
+      currentPosition = position;
+      LatLng pos = LatLng(position.latitude,position.longitude);
+
+      Marker movingMarker = Marker(
+        markerId: MarkerId('moving'),
+        position: pos,
+        icon: movingMarkerIcon,
+        infoWindow: InfoWindow(title: 'Current Location'),
+      );
+
+      setState(() {
+        CameraPosition cp = CameraPosition(target: pos,zoom: 17);
+        rideMapController.animateCamera(CameraUpdate.newCameraPosition(cp));
+
+        //replace marker
+        _markers.removeWhere((marker) => marker.markerId.value == 'moving');
+        _markers.add(movingMarker);
+
+      });
+
+    });
+  }
+
 }
