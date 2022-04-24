@@ -44,6 +44,7 @@ dependencies:
   flutter_geofire: ^1.0.3
   assets_audio_player: ^2.0.1+7
   toast: ^0.1.5
+  maps_toolkit: ^1.1.0+1
 
 dev_dependencies:
   flutter_test:

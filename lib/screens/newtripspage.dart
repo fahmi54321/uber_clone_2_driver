@@ -10,6 +10,7 @@ import 'package:uber_clone_2_driver/brand_colors.dart';
 import 'package:uber_clone_2_driver/datamodels/tripdetails.dart';
 import 'package:uber_clone_2_driver/globalvariabel.dart';
 import 'package:uber_clone_2_driver/helpers/helpersmethod.dart';
+import 'package:uber_clone_2_driver/helpers/mapkithelper.dart';
 import 'package:uber_clone_2_driver/widgets/progress_dialog.dart';
 import 'package:uber_clone_2_driver/widgets/taxi_button.dart';
 
@@ -35,13 +36,11 @@ class _NewTripsPageState extends State<NewTripsPage> {
   List<LatLng> polylineCoordinates = [];
   PolylinePoints polylinePoints = PolylinePoints();
 
-  //todo 1
   var geolocator = Geolocator();
   var locationOptions = LocationOptions(accuracy: LocationAccuracy.bestForNavigation);
   BitmapDescriptor movingMarkerIcon;
   Position myPosition;
 
-  //todo 2
   void createMarker() {
     if (movingMarkerIcon == null) {
       ImageConfiguration imageConfiguration =
@@ -66,7 +65,6 @@ class _NewTripsPageState extends State<NewTripsPage> {
   @override
   Widget build(BuildContext context) {
 
-    //todo 3
     createMarker();
 
     return Scaffold(
@@ -97,7 +95,6 @@ class _NewTripsPageState extends State<NewTripsPage> {
 
               await getDirection(currentLatLng, pickupLatLng);
 
-              //todo 5 (finish)
               getLocationUpdates();
 
             },
@@ -327,17 +324,27 @@ class _NewTripsPageState extends State<NewTripsPage> {
     rideRef.child('driver_location').set(locationMap);
   }
 
-  //todo 4
   void getLocationUpdates(){
+
+    LatLng oldPosition = LatLng(0, 0); //todo 2
+
     ridePositionStream = geolocator.getPositionStream(locationOptions).listen((Position position) {
       myPosition = position;
       currentPosition = position;
       LatLng pos = LatLng(position.latitude,position.longitude);
 
+      var rotation = MapKitHelper.getMarkerRotation( //todo 3
+        oldPosition.latitude,
+        oldPosition.longitude,
+        pos.latitude,
+        pos.longitude,
+      );
+
       Marker movingMarker = Marker(
         markerId: MarkerId('moving'),
         position: pos,
         icon: movingMarkerIcon,
+        rotation: rotation, //todo 4
         infoWindow: InfoWindow(title: 'Current Location'),
       );
 
@@ -350,6 +357,8 @@ class _NewTripsPageState extends State<NewTripsPage> {
         _markers.add(movingMarker);
 
       });
+
+      oldPosition = pos; //todo 5 (finish)
 
     });
   }
