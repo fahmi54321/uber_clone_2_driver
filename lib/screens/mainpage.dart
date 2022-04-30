@@ -16,10 +16,10 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage>
     with SingleTickerProviderStateMixin {
 
-  TabController tabController; //todo 1
-  int selectedIndex = 0; //todo 2
+  TabController tabController;
+  int selectedIndex = 0;
 
-  void onItemClicked(int index){ //todo 3
+  void onItemClicked(int index){
     setState(() {
       selectedIndex = index;
       tabController.index = selectedIndex;
@@ -28,15 +28,13 @@ class _MainPageState extends State<MainPage>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    tabController = TabController(length: 4, vsync: this); //todo 4
+    tabController = TabController(length: 4, vsync: this);
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
-    tabController.dispose(); //todo 5
+    tabController.dispose();
     super.dispose();
   }
 
@@ -65,8 +63,8 @@ class _MainPageState extends State<MainPage>
         showSelectedLabels: true,
         selectedLabelStyle: TextStyle(fontSize: 12),
         type: BottomNavigationBarType.fixed,
-        onTap: onItemClicked, //todo 6
-        currentIndex: selectedIndex, //todo 7 (finish)
+        onTap: onItemClicked,
+        currentIndex: selectedIndex,
       ),
     );
   }

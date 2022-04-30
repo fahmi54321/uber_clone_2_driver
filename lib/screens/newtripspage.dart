@@ -41,6 +41,11 @@ class _NewTripsPageState extends State<NewTripsPage> {
   BitmapDescriptor movingMarkerIcon;
   Position myPosition;
 
+  //todo 1
+  String status = 'accepted';
+  String durationString = '';
+  bool isRequestingDirection = false;
+
   void createMarker() {
     if (movingMarkerIcon == null) {
       ImageConfiguration imageConfiguration =
@@ -124,7 +129,7 @@ class _NewTripsPageState extends State<NewTripsPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '14 Mins',
+                      durationString, //todo 2
                       style: TextStyle(
                         fontSize: 14,
                         fontFamily: 'Brand-Bold',
@@ -326,14 +331,14 @@ class _NewTripsPageState extends State<NewTripsPage> {
 
   void getLocationUpdates(){
 
-    LatLng oldPosition = LatLng(0, 0); //todo 2
+    LatLng oldPosition = LatLng(0, 0);
 
     ridePositionStream = geolocator.getPositionStream(locationOptions).listen((Position position) {
       myPosition = position;
       currentPosition = position;
       LatLng pos = LatLng(position.latitude,position.longitude);
 
-      var rotation = MapKitHelper.getMarkerRotation( //todo 3
+      var rotation = MapKitHelper.getMarkerRotation(
         oldPosition.latitude,
         oldPosition.longitude,
         pos.latitude,
@@ -344,7 +349,7 @@ class _NewTripsPageState extends State<NewTripsPage> {
         markerId: MarkerId('moving'),
         position: pos,
         icon: movingMarkerIcon,
-        rotation: rotation, //todo 4
+        rotation: rotation,
         infoWindow: InfoWindow(title: 'Current Location'),
       );
 
@@ -358,9 +363,53 @@ class _NewTripsPageState extends State<NewTripsPage> {
 
       });
 
-      oldPosition = pos; //todo 5 (finish)
+      oldPosition = pos;
+
+      //todo 4
+      updateTripDetails();
+
+      //todo 5
+      Map locationMap = {
+        'latitude' : myPosition.latitude.toString(),
+        'longitude' : myPosition.longitude.toString(),
+      };
+
+      //todo 6 (finish)
+      rideRef.child('driver_location').set(locationMap);
 
     });
+  }
+
+  //todo 3
+  void updateTripDetails() async{
+
+    if(!isRequestingDirection){
+
+      isRequestingDirection = true;
+
+      if(myPosition == null){
+        return;
+      }
+
+      var positionLatLng = LatLng(myPosition.latitude, myPosition.longitude);
+      LatLng destionationLatLng;
+
+      if(status == 'accepted'){
+        destionationLatLng = widget.tripDetails.pickup;
+      }else{
+        destionationLatLng = widget.tripDetails.destination;
+      }
+
+      var directionDetails = await HelperMethods.getDirectionDetails(positionLatLng, destionationLatLng);
+      if(directionDetails != null){
+        setState(() {
+          durationString = directionDetails.distanceText;
+        });
+      }
+    }
+
+    isRequestingDirection = false;
+
   }
 
 }
