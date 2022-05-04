@@ -44,7 +44,7 @@ class HelperMethods {
 
     double baseFare = 3;
     double distanceFare = (details.distanceValue / 1000) * 0.3;
-    double timeFare = (durationValue / 60) * 0.2; //todo 2
+    double timeFare = (durationValue / 60) * 0.2; //todo 2 (next newtripspage)
 
     double totalFare = baseFare + distanceFare + timeFare;
 
