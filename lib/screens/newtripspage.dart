@@ -41,10 +41,14 @@ class _NewTripsPageState extends State<NewTripsPage> {
   BitmapDescriptor movingMarkerIcon;
   Position myPosition;
 
-  //todo 1
   String status = 'accepted';
   String durationString = '';
   bool isRequestingDirection = false;
+
+  String buttonTitle = 'ARRIVED';
+  Color buttonColor = BrandColors.colorGreen;
+  Timer timer;
+  int durationCounter = 0;
 
   void createMarker() {
     if (movingMarkerIcon == null) {
@@ -129,7 +133,7 @@ class _NewTripsPageState extends State<NewTripsPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      durationString, //todo 2
+                      durationString,
                       style: TextStyle(
                         fontSize: 14,
                         fontFamily: 'Brand-Bold',
@@ -181,9 +185,42 @@ class _NewTripsPageState extends State<NewTripsPage> {
                     ),
                     SizedBox(height: 15),
                     TaxiButton(
-                      title: 'ARRIVED',
-                      color: BrandColors.colorGreen,
-                      onPressed: (){},
+                      title: buttonTitle,
+                      color: buttonColor,
+                      onPressed: () async{
+
+
+                        //todo 1
+                        if(status == 'accepted'){
+                          status = 'arrived';
+                          rideRef.child('status').set(status);
+
+                          setState(() {
+                            buttonTitle = 'START TRIP';
+                            buttonColor = BrandColors.colorAccentPurple;
+                          });
+
+                          HelperMethods.showProgressDialog(context);
+
+                          await getDirection(widget.tripDetails.pickup, widget.tripDetails.destination,);
+
+                          Navigator.pop(context);
+
+                        }else if(status == 'arrived'){
+                          status = 'ontrip';
+                          rideRef.child('status').set(status);
+
+
+                          setState(() {
+                            buttonTitle = 'END TRIP';
+                            buttonColor = Colors.red[900];
+                          });
+
+                          starTimer(); //todo 2 (finish)
+
+                        }
+
+                      },
                     ),
                   ],
                 ),
@@ -365,22 +402,18 @@ class _NewTripsPageState extends State<NewTripsPage> {
 
       oldPosition = pos;
 
-      //todo 4
       updateTripDetails();
 
-      //todo 5
       Map locationMap = {
         'latitude' : myPosition.latitude.toString(),
         'longitude' : myPosition.longitude.toString(),
       };
 
-      //todo 6 (finish)
       rideRef.child('driver_location').set(locationMap);
 
     });
   }
 
-  //todo 3
   void updateTripDetails() async{
 
     if(!isRequestingDirection){
@@ -410,6 +443,11 @@ class _NewTripsPageState extends State<NewTripsPage> {
 
     isRequestingDirection = false;
 
+  }
+
+  void starTimer(){
+    const interval = Duration(seconds: 1);
+    timer = Timer.periodic(interval, (timer) {durationCounter++;});
   }
 
 }
