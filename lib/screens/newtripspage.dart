@@ -465,11 +465,27 @@ class _NewTripsPageState extends State<NewTripsPage> {
     rideRef.child('status').set('ended');
     ridePositionStream.cancel();
 
-    // todo 1 (next collecting_payment_for_fares)
     showDialog(context: context,barrierDismissible: false,builder: (BuildContext context) => CollectPayment(
       paymentMethod: widget.tripDetails.paymentMethod,
       fares: fares,
     ));
+
+    topUpEarnings(fares); //todo 1
+  }
+
+  //todo 2 (finish)
+  void topUpEarnings(int fares){
+    DatabaseReference earningRef = FirebaseDatabase.instance.reference().child('drivers/${currentFirebaseUser.uid}/earnings');
+    earningRef.once().then((DataSnapshot snapshot) {
+      if(snapshot.value != null){
+        double oldEarnings = double.parse(snapshot.value.toString());
+        double adjustedEarnings = (fares.toDouble() * 0.85) + oldEarnings;
+        earningRef.set(adjustedEarnings.toStringAsFixed(2));
+      }else{
+        double adjustedEarnings = (fares.toDouble() * 0.85);
+        earningRef.set(adjustedEarnings.toStringAsFixed(2));
+      }
+    });
   }
 
 }
