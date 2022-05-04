@@ -364,6 +364,11 @@ class _NewTripsPageState extends State<NewTripsPage> {
     };
 
     rideRef.child('driver_location').set(locationMap);
+
+    //todo 1
+    DatabaseReference historyRef = FirebaseDatabase.instance.reference().child('drivers/${currentFirebaseUser.uid}/history/$rideID');
+    historyRef.set(true); //todo 2 (finish)
+
   }
 
   void getLocationUpdates(){
@@ -470,10 +475,9 @@ class _NewTripsPageState extends State<NewTripsPage> {
       fares: fares,
     ));
 
-    topUpEarnings(fares); //todo 1
+    topUpEarnings(fares);
   }
 
-  //todo 2 (finish)
   void topUpEarnings(int fares){
     DatabaseReference earningRef = FirebaseDatabase.instance.reference().child('drivers/${currentFirebaseUser.uid}/earnings');
     earningRef.once().then((DataSnapshot snapshot) {
