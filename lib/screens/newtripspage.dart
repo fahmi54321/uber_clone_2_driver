@@ -11,6 +11,7 @@ import 'package:uber_clone_2_driver/datamodels/tripdetails.dart';
 import 'package:uber_clone_2_driver/globalvariabel.dart';
 import 'package:uber_clone_2_driver/helpers/helpersmethod.dart';
 import 'package:uber_clone_2_driver/helpers/mapkithelper.dart';
+import 'package:uber_clone_2_driver/widgets/collecting_payment_for_fares.dart';
 import 'package:uber_clone_2_driver/widgets/progress_dialog.dart';
 import 'package:uber_clone_2_driver/widgets/taxi_button.dart';
 
@@ -216,7 +217,7 @@ class _NewTripsPageState extends State<NewTripsPage> {
                           });
 
                           starTimer();
-                        } else if (status == 'ontrip') { // todo 4 (finish)
+                        } else if (status == 'ontrip') {
                           endTrip();
                         }
                       },
@@ -449,7 +450,6 @@ class _NewTripsPageState extends State<NewTripsPage> {
     timer = Timer.periodic(interval, (timer) {durationCounter++;});
   }
 
-  //todo 3
   void endTrip() async{
     timer.cancel();
     HelperMethods.showProgressDialog(context);
@@ -464,6 +464,12 @@ class _NewTripsPageState extends State<NewTripsPage> {
     rideRef.child('fares').set(fares.toString());
     rideRef.child('status').set('ended');
     ridePositionStream.cancel();
+
+    // todo 1 (next collecting_payment_for_fares)
+    showDialog(context: context,barrierDismissible: false,builder: (BuildContext context) => CollectPayment(
+      paymentMethod: widget.tripDetails.paymentMethod,
+      fares: fares,
+    ));
   }
 
 }
