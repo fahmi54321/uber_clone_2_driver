@@ -145,7 +145,11 @@ class _NewTripsPageState extends State<NewTripsPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Daniel Jones',style: TextStyle(fontSize: 22,fontFamily: 'Brand-Bold'),),
+                        Text(
+                          widget.tripDetails.riderName, //todo 1
+                          style:
+                              TextStyle(fontSize: 22, fontFamily: 'Brand-Bold'),
+                        ),
                         Padding(
                           padding: EdgeInsets.only(right: 10),
                           child: Icon(Icons.phone),
@@ -160,7 +164,7 @@ class _NewTripsPageState extends State<NewTripsPage> {
                         Expanded(
                           child: Container(
                             child: Text(
-                              'NYSD Rd,aaaa',
+                              widget.tripDetails.pickupAddress, //todo 2
                               style: TextStyle(fontSize: 18),
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -176,7 +180,7 @@ class _NewTripsPageState extends State<NewTripsPage> {
                         Expanded(
                           child: Container(
                             child: Text(
-                              'NYSD Rd,aaaa',
+                              widget.tripDetails.destinationAddress, //todo 3 (next pushnotificationservice)
                               style: TextStyle(fontSize: 18),
                               overflow: TextOverflow.ellipsis,
                             ),

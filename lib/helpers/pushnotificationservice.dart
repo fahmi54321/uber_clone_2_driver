@@ -77,7 +77,6 @@ class PushNotificationService{
 
       if(snapshot.value != null){
 
-        //todo 2 (next notification_dialog)
         assetAudioPlayer.open(Audio('sounds/alert.mp3'));
         assetAudioPlayer.play();
 
@@ -89,6 +88,8 @@ class PushNotificationService{
         double destinationLng = double.parse(snapshot.value['destination']['longitude'].toString());
         String destinationAddress = snapshot.value['destination_address'];
         String paymentMethod = snapshot.value['payment_method'];
+        String rideName = snapshot.value['rider_name']; //todo 4
+        String ridePhone = snapshot.value['rider_phone']; //todo 5
 
         TripDetails tripDetails = TripDetails();
         tripDetails.pickupAddress = pickupAddress;
@@ -97,6 +98,8 @@ class PushNotificationService{
         tripDetails.destination = LatLng(destinationLat, destinationLng);
         tripDetails.paymentMethod = paymentMethod;
         tripDetails.rideID = rideId;
+        tripDetails.riderName = rideName; //todo 6
+        tripDetails.riderPhone = ridePhone; //todo 7 (finish)
 
         showDialog(
           context: context,
