@@ -37,14 +37,14 @@ class HelperMethods {
     return directionDetails;
   }
 
-  static int estimateFares(DirectionDetails details) {
+  static int estimateFares(DirectionDetails details, int durationValue) { //todo 1
     // per km = $0.3
     // per minute = $0.2
     // base fare = $3
 
     double baseFare = 3;
     double distanceFare = (details.distanceValue / 1000) * 0.3;
-    double timeFare = (details.durationValue / 60) * 0.2;
+    double timeFare = (durationValue / 60) * 0.2; //todo 2
 
     double totalFare = baseFare + distanceFare + timeFare;
 
@@ -58,7 +58,6 @@ class HelperMethods {
     return randInt.toDouble();
   }
 
-  //todo 1
   static void disableHomeTabLocationUpdates() {
     homeTabPositionStream.pause();
     Geofire.removeLocation(currentFirebaseUser.uid);

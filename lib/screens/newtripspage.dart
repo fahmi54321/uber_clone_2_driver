@@ -190,7 +190,6 @@ class _NewTripsPageState extends State<NewTripsPage> {
                       onPressed: () async{
 
 
-                        //todo 1
                         if(status == 'accepted'){
                           status = 'arrived';
                           rideRef.child('status').set(status);
@@ -216,10 +215,10 @@ class _NewTripsPageState extends State<NewTripsPage> {
                             buttonColor = Colors.red[900];
                           });
 
-                          starTimer(); //todo 2 (finish)
-
+                          starTimer();
+                        } else if (status == 'ontrip') { // todo 4 (finish)
+                          endTrip();
                         }
-
                       },
                     ),
                   ],
@@ -448,6 +447,23 @@ class _NewTripsPageState extends State<NewTripsPage> {
   void starTimer(){
     const interval = Duration(seconds: 1);
     timer = Timer.periodic(interval, (timer) {durationCounter++;});
+  }
+
+  //todo 3
+  void endTrip() async{
+    timer.cancel();
+    HelperMethods.showProgressDialog(context);
+
+    var currentLatLng = LatLng(myPosition.latitude, myPosition.longitude);
+    var directionDetails = await HelperMethods.getDirectionDetails(widget.tripDetails.pickup, currentLatLng);
+
+    Navigator.pop(context);
+
+    int fares = HelperMethods.estimateFares(directionDetails, durationCounter);
+    
+    rideRef.child('fares').set(fares.toString());
+    rideRef.child('status').set('ended');
+    ridePositionStream.cancel();
   }
 
 }
